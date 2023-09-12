@@ -4,12 +4,14 @@ import java.util.Scanner;
 
 import com.serratec.ListaClasse.ListaCliente;
 import com.serratec.ListaClasse.ListaEmpresa;
+import com.serratec.classes.Cliente;
 import com.serratec.classes.Empresa;
 import com.serratec.conexao.Connect;
 import com.serratec.constantes.Util;
 import com.serratec.dml.EmpresaDML;
 
 public class MenuEmpresa {
+
 	public static int menu() {
 
 		Util.escrever(Util.LINHAD);
@@ -29,8 +31,8 @@ public class MenuEmpresa {
 	public static int opcoes(int opcao) {
 
 		switch (opcao) {
-		case 1: cadastrar("Cadastro de empresa: "); break;
-		case 2: alterar("Alteração de empresa - insira o id da empresa a ser alterada: "); break;
+		case 1: cadastrar(); break;
+		case 2: alterar("Alteração de empresa - insira o CNPJ da empresa a ser alterada: "); break;
 		case 3: excluir("Exclusão de empresa - insira o CNPJ da empresa a ser excluida: "); break;
 		case 4: listar(); break;
 		case 5:
@@ -41,37 +43,52 @@ public class MenuEmpresa {
 			break;
 		default:
 			Util.escrever("Opcao invalida");
+			Util.aperteEnter();
+			return opcoes(menu());
 		}
 		return opcao;
 	}
 
-	public static int cadastrar(String msg) {
-		System.out.println(msg);
-		EmpresaDML.gravarEmpresa(Connect.getCon(), Connect.dadosCon.getSchema(), Empresa.cadastrarEmpresa());
+	public static int cadastrar() {
+		
+		Empresa e = Empresa.cadastrarEmpresa();
+		EmpresaDML.gravarEmpresa(Connect.getCon(), Connect.dadosCon.getSchema(), e);
+		Connect.empresas.adicionarEmpresaLista(e);
 		return opcoes(menu());
 	}
 
 	public static int alterar(String msg) {
 		System.out.println(msg);
-		ListaEmpresa.localizarEmpresa(1);
+		
+	
+		
+		Empresa e = ListaEmpresa.localizarEmpresa();
+		if (!(e == null)) {
+		Empresa.alterarEmpresa(e);
+		EmpresaDML.alterarEmpresa(Connect.getCon(), Connect.dadosCon.getSchema(), e);
+			
+		}else {System.out.println("Empresa não encontrada, retornando ao menu."); }
+		
+		Util.aperteEnter();
 		return opcoes(menu());
 	}
 
 	public static int excluir(String msg) {
 		System.out.println(msg);
-		if(	ListaEmpresa.excluirEmpresa(ListaEmpresa.localizarEmpresa(2))){
+		if(	ListaEmpresa.excluirEmpresa(ListaEmpresa.localizarEmpresa())){
 			
 			System.out.println("Empresa excluída com sucesso!");
-		}else{ System.out.println("Empresa não excluída!");
-		};
+		}else{ System.out.println("Empresa não excluída!");};
+		Util.aperteEnter();
 		return opcoes(menu());
 		
 	}
 
 	public static int listar() {
+		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
 		Connect.empresas.imprimirEmpresas();
-		input.next();
+		Util.aperteEnter();
 		return opcoes(menu());
 	}
 }

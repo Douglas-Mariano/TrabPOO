@@ -17,8 +17,8 @@ public class ListaEmpresa {
 	static ArrayList<Empresa> empresas = new ArrayList<>();
 
 	public ListaEmpresa(Conexao con, String schema) {
-		this.con = con;
-		this.schema = schema;
+		ListaEmpresa.con = con;
+		ListaEmpresa.schema = schema;
 		carregarListaEmpresas();
 	}
 
@@ -27,10 +27,10 @@ public class ListaEmpresa {
 
 		try {
 			e.setNome(tabela.getString("nome"));
-			e.setCpf_cnpj("cpf");
+			e.setCpf_cnpj(tabela.getString("cnpj"));
 			e.setEndereco(tabela.getString("endereco"));
-			e.setTelefone("telefone");
-			e.setEmail("email");
+			e.setTelefone(tabela.getString("telefone"));
+			e.setEmail(tabela.getString("email"));
 			e.setIdEmpresa(tabela.getInt("idEmpresa"));
 			return e;
 		} catch (SQLException var4) {
@@ -42,13 +42,13 @@ public class ListaEmpresa {
 	private void carregarListaEmpresas() {
 		EmpresaDAO edao = new EmpresaDAO(con, schema);
 		ResultSet tabela = edao.carregarEmpresa();
-		this.empresas.clear();
+		ListaEmpresa.empresas.clear();
 
 		try {
 			tabela.beforeFirst();
 
 			while (tabela.next()) {
-				this.empresas.add(this.dadosEmpresa(tabela));
+				ListaEmpresa.empresas.add(this.dadosEmpresa(tabela));
 			}
 
 			tabela.close();
@@ -59,62 +59,52 @@ public class ListaEmpresa {
 
 	}
 
-	public void imprimirEmpresas() {
-		System.out.println("\nLista de empresas: ");
-		System.out.println("\n===================");
-		System.out.println("\nNome\t\t| CNPJ\t\t| email");
-		System.out.println("\n===================");
-		
-		for (Empresa e : empresas){
-			System.out.println (e.getNome() + "\t\t" + e.getCpf_cnpj()+ "\t\t"+ e.getEmail());
-		}
-		
-	}
-
-	public static Empresa localizarEmpresa(int opt) {
+	public static Empresa localizarEmpresa() {
 		Empresa localizado = null;
-		int idempresa;
 		String cnpjempresa;
+		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
-			
-		switch(opt)	{
-		
-		case 1: {
-				idempresa = input.nextInt();	
-				for (Empresa e : empresas) {
-					if (e.getIdEmpresa()== idempresa) {
-						localizado = e;
-						break;}
-						System.out.println("Empresa não localizada, retornando ao menu."); input.next(); break;
-				}
+
+		cnpjempresa = input.nextLine();
+		for (Empresa e : empresas) {
+			if (e.getCpf_cnpj().equals(cnpjempresa)) {
+				localizado = e;
+				break;
+			}
+
 		}
-			
-		case 2: {
-				cnpjempresa = input.nextLine();
-				for (Empresa e : empresas) {
-					if (e.getCpf_cnpj().equals(cnpjempresa)) {
-						localizado = e;
-						break;}
-						
-				} //System.out.println("Cliente não localizado, retornando ao menu."); input.next(); break;
-		}
-			}return localizado;
+		return localizado;
 	}
 
 	public static boolean excluirEmpresa(Empresa e) {
-	
-		
+
 		boolean excluido = false;
 		for (Empresa cl : empresas) {
-			if(cl.getIdEmpresa() == e.getIdEmpresa()) {
+			if (cl.getIdEmpresa() == e.getIdEmpresa()) {
 				empresas.remove(empresas.lastIndexOf(cl));
 				EmpresaDML.excluirEmpresa(con, schema, e);
 				excluido = true;
 				break;
 			}
-					
+
 		}
 		return excluido;
 	}
 
+	public void adicionarEmpresaLista(Empresa e) {
+		ListaEmpresa.empresas.add(e);
+	}
+
+	public void imprimirEmpresas() {
+		System.out.println("===================");
+		System.out.println("Lista de empresas: ");
+		System.out.println("===================");
+		System.out.println("\nNome\t\t| CNPJ\t\t  |Email");
+		System.out.println("================================================");
+
+		for (Empresa e : empresas) {
+			String formatarTamanho = String.format("%-15s | %-15s | %-10s", e.getNome(), e.getCpf_cnpj(), e.getEmail());
+			System.out.println(formatarTamanho);
+		}
+	}
 }

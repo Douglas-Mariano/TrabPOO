@@ -1,6 +1,10 @@
 package com.serratec.menu;
 
+import java.util.Scanner;
+
+import com.serratec.ListaClasse.ListaCliente;
 import com.serratec.ListaClasse.ListaProduto;
+import com.serratec.classes.Cliente;
 import com.serratec.classes.Produto;
 import com.serratec.conexao.Connect;
 import com.serratec.constantes.Util;
@@ -8,7 +12,6 @@ import com.serratec.dml.ProdutoDML;
 
 public class MenuProduto {
 
-	public static ListaProduto produtos = new ListaProduto(Connect.getCon(), Connect.dadosCon.getSchema());
 
 	public static int menu() {
 
@@ -30,8 +33,8 @@ public class MenuProduto {
 
 		switch (opcao) {
 		case 1: cadastrar(); break;
-		case 2: alterar(); break;
-		case 3: excluir(); break;
+		case 2: alterar("Alteração do produto! Insira o código do produto a ser alterado."); break;
+		case 3: excluir("Exclusão do produto! Insira o código do produto a ser excluído."); break;
 		case 4: listar(); break;
 		case 5:
 			int opcaoMenuPrincipal = MenuPrincipal.menuPrincipal();
@@ -41,42 +44,50 @@ public class MenuProduto {
 			break;
 		default:
 			Util.escrever("Opcao inválida");
+			Util.aperteEnter();
+			return opcoes(menu());
 		}
 		return opcao;
 	}
 
 	public static void cadastrar() {
+		
 		Produto produto = Produto.cadastrarProduto();
 		ProdutoDML.gravarProduto(Connect.getCon(), Connect.dadosCon.getSchema(), produto);
-		produtos.adicionarProdutoLista(produto);
-		
+		Connect.produtos.adicionarProdutoLista(produto);
 		opcoes(menu());
 	}
 
-	public static void alterar() {
-		Produto prodAlterar = produtos.localizarProduto(Produto.localizarProduto("Alteração do produto!"));
+	public static void alterar(String msg) {
+		System.out.println(msg);
 		
-		if (!(prodAlterar == null)) {
-			Produto.alterarProduto(prodAlterar);
-			ProdutoDML.alterarProduto(Connect.getCon(), Connect.dadosCon.getSchema(), prodAlterar);
+		Produto p = ListaProduto.localizarProduto();
+		
+		if (!(p == null)) {
+			Produto.alterarProduto(p);
+			ProdutoDML.alterarProduto(Connect.getCon(), Connect.dadosCon.getSchema(), p);
 		}
-		else System.out.println("Produto não encontrado!");
+		else System.out.println("Produto não encontrado!");Util.aperteEnter();
 		opcoes(menu());
 	}
 	
-	public static void excluir() {
-		Produto prodExcluir = produtos.localizarProduto(Produto.localizarProduto("Exclusão do produto!"));
+	public static void excluir(String msg) {
 		
-		if(!(prodExcluir == null)) {
-			produtos.excluirProduto(prodExcluir);
-			ProdutoDML.excluirProduto(Connect.getCon(), Connect.dadosCon.getSchema(), prodExcluir);
-		}
-		else System.out.println("Produto não encontrado!");
+		System.out.println(msg);
+		if	(Connect.produtos.excluirProduto(ListaProduto.localizarProduto())) {
+			System.out.println("Produto excluído com sucesso!");
+			Util.aperteEnter();
+		}else {System.out.println("Produto não encontrado, retornando ao menu.");Util.aperteEnter(); }
+		
+		
 		opcoes(menu());
 	}
 
 	public static int listar() {
+		@SuppressWarnings("resource")
+		Scanner input = new Scanner(System.in);
 		ListaProduto.imprimirProdutos();
+		Util.aperteEnter();
 		return opcoes(menu());
 	}
 }

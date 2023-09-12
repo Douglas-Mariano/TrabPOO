@@ -1,14 +1,16 @@
 package com.serratec.menu;
 
 import com.serratec.classes.Cliente;
+import com.serratec.classes.Empresa;
 import com.serratec.conexao.Connect;
 import com.serratec.constantes.Util;
 import com.serratec.dml.ClienteDML;
+import com.serratec.dml.EmpresaDML;
+
 import java.util.Scanner;
 import com.serratec.ListaClasse.ListaCliente;
 
-public class MenuCliente {
-	
+public class MenuCliente {	
 	
 	public static int menu() {
 		
@@ -25,12 +27,12 @@ public class MenuCliente {
 		
 		return Util.validarInteiro("Informe uma opcao: ");
 	}
-	// ENCONTRAR MODO DE ATUALIZAR LISTAS AO CADASTRAR/ALTERAR/EXCLUIR SEM PRECISAR REINICIAR APLICATIVO
+	
 	public static int opcoes(int opcao) {
 			
 		switch (opcao) {
-			case 1: cadastrar("Cadastro de cliente: "); break;
-			case 2: alterar("Alteração de cliente - insira o id do cliente a ser alterado: "); break;
+			case 1: cadastrar(); break;
+			case 2: alterar("Alteração de cliente - insira o CPF do cliente a ser alterado: "); break;
 			case 3: excluir("Exclusão de cliente - insira o CPF do cliente a ser excluido: "); break;
 			case 4: listar(); break;
 			case 5: 
@@ -38,48 +40,50 @@ public class MenuCliente {
 				return MenuPrincipal.opcoes(opcaoMenuPrincipal);
 			case 6: Util.escrever("Sistema Finalizado!"); break;
 			default: Util.escrever("Opcao invalida");
+			Util.aperteEnter();
+			return opcoes(menu());
 		}
 		return opcao;
 	}
 		
-	public static int cadastrar(String msg) {
+	public static int cadastrar() {
 		
-		System.out.println(msg);
-		
-		ClienteDML.gravarCliente(Connect.getCon(), Connect.dadosCon.getSchema(), Cliente.cadastrarCliente());
-		Connect.clientes.carregarListaClientes();
+		Cliente c = Cliente.cadastrarCliente();
+		ClienteDML.gravarCliente(Connect.getCon(), Connect.dadosCon.getSchema(), c);
+		Connect.clientes.adicionarClienteLista(c);
+		Util.aperteEnter();
 		return opcoes(menu());
 	}
 	
 	public static int alterar(String msg) {
 		System.out.println(msg);
 		
-		Cliente c = ListaCliente.localizarCliente(1);
+		Cliente c = ListaCliente.localizarCliente();
 		if (!(c == null)) {
-		ClienteDML.alterarCliente(Connect.getCon(), Connect.dadosCon.getSchema(), c);
-		Connect.clientes.carregarListaClientes();
-		}
 		
+		Cliente.alterarCliente(c);
+		ClienteDML.alterarCliente(Connect.getCon(), Connect.dadosCon.getSchema(), c);
+		
+		}else {System.out.println("Cliente não encontrado, retornando ao menu."); }
+		Util.aperteEnter();
 		return opcoes(menu());
 	}
 	
 	public static int excluir(String msg) {
 		System.out.println(msg);
-		if(	ListaCliente.excluirCliente(ListaCliente.localizarCliente(2))){
-			
+		if(	ListaCliente.excluirCliente(ListaCliente.localizarCliente())){
 			System.out.println("Cliente excluído com sucesso!");
-			Connect.clientes.carregarListaClientes();
-		}else{ System.out.println("Cliente não excluído!");
-		
-		};
-		
+			
+		}else{ System.out.println("Cliente não encontrado, retornando ao menu."); }
+		Util.aperteEnter();
 		return opcoes(menu());
 	}
 	
 	public static int listar() {
-		Scanner input = new Scanner(System.in);
+		
 		Connect.clientes.imprimirClientes();
-		input.next();
+		Util.aperteEnter();
 		return opcoes(menu());
+		
 	}
 }

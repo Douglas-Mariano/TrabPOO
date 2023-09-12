@@ -13,13 +13,13 @@ public class ListaPedido {
 	private String schema;
 
 	static ArrayList<Pedido> pedidos = new ArrayList<>();
-/*
+
 	public ListaPedido(Conexao con, String schema) {
 		this.con = con;
 		this.schema = schema;
-		this.carregarListaPedidos();
+		//this.carregarListaPedidos();
 	}
-
+/*
 	private Pedido dadosPedido(ResultSet tabela) {
 		Pedido p = new Pedido(0, 0, null, null, null);
 
@@ -40,13 +40,13 @@ public class ListaPedido {
 	private void carregarListaPedidos() {
 		PedidoDAO edao = new PedidoDAO(con, schema);
 		ResultSet tabela = edao.carregarEmpresa();
-		this.pedidos.clear();
+		ListaPedido.pedidos.clear();
 
 		try {
 			tabela.beforeFirst();
 
 			while (tabela.next()) {
-				this.pedidos.add(this.dadosPedido(tabela));
+				ListaPedido.pedidos.add(this.dadosPedido(tabela));
 			}
 
 			tabela.close();

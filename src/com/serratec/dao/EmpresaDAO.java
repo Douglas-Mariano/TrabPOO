@@ -54,7 +54,7 @@ public class EmpresaDAO {
 		sql += " cnpj = ?,";
 		sql += " endereco = ?,";
 		sql += " telefone = ?,";
-		sql += " email = ?,";
+		sql += " email = ?";
 		sql += " where idempresa = ?";
 
 		try {

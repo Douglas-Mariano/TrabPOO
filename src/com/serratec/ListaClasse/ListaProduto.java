@@ -3,12 +3,12 @@ package com.serratec.ListaClasse;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Scanner;
 
 import com.serratec.classes.Produto;
 import com.serratec.conexao.Conexao;
-import com.serratec.constantes.Util;
 import com.serratec.dao.ProdutoDAO;
+import com.serratec.dml.ProdutoDML;
 
 public class ListaProduto {
 
@@ -68,41 +68,48 @@ public class ListaProduto {
 		ListaProduto.produtos.add(prod);
 	}
 
-	public Produto localizarProduto(int idProduto) {
+	public static Produto localizarProduto() {
 		Produto localizado = null;
+		Long cdprod;
+		@SuppressWarnings("resource")
+		Scanner input = new Scanner(System.in);
+		cdprod = input.nextLong();
 
 		for (Produto prod : produtos) {
-			if (prod.getIdProduto() == idProduto) {
+			if (prod.getCdProduto() == cdprod) {
 				localizado = prod;
 				break;
 			}
 		}
-
 		return localizado;
 	}
 
-	public void excluirProduto(Produto prodExcluir) {
+	public boolean excluirProduto(Produto prodExcluir) {
 
-		Iterator<Produto> pExcluir = produtos.iterator();
-
-		while (pExcluir.hasNext()) {
-			Produto prod = pExcluir.next();
-			if (prod.getIdProduto() == prodExcluir.getIdProduto()) {
-				pExcluir.remove();
+		boolean excluido = false;
+		for (Produto pd : produtos) {
+			if (pd.getIdProduto() == prodExcluir.getIdProduto()) {
+				produtos.remove(produtos.lastIndexOf(pd));
+				ProdutoDML.excluirProduto(con, schema, prodExcluir);
+				excluido = true;
+				break;
 			}
 		}
+		return excluido;
 	}
 
 	public static void imprimirProdutos() {
 
-		System.out.println(Util.LINHAD);
-		Util.escrever("Relatório de Produtos:");
-		System.out.println(Util.LINHA);
-		Util.escrever("Código\t | Nome\t\t| descrição| vl. Unit.\t\t| Porc. de Lucro\t| vl. Venda");
-
+		System.out.println("===================");
+		System.out.println("Lista de produtos: ");
+		System.out.println("===================");
+		System.out.println("\nCódigo\t| Nome\t\t| Descrição\t\t| vl. Unit\t\t| Porc. de Lucro\t| vl. Venda");
+		System.out.println(
+				"============================================================================================================");
 		for (Produto p : produtos) {
-			System.out.println(p.getCdProduto() + "\t\t" + p.getNome() + " " + p.getDescricao() + "\t\t"
-					+ p.getValorUnit() + "\t\t" + p.getPorcento() + "\t\t" + p.getValorVenda());
+			String formatarTamanho = String.format("%-7s | %-13s | %-21s | %-21s | %-21s | %-2s", p.getCdProduto(),
+					p.getNome(), p.getDescricao(), p.getValorUnit(), p.getPorcento(), p.getValorVenda());
+			System.out.println(formatarTamanho);
 		}
 	}
 }

@@ -19,11 +19,8 @@ public class Connect {
 	
 	public static ListaCliente clientes;
 	public static ListaEmpresa empresas;
-	private static ListaProduto produtos;
-	
-	
-	
-	//public static ListaPedido pedidos;
+	public static ListaProduto produtos;
+	public static ListaPedido pedidos;
 	
 	public static void dadosEntrada() {
 		

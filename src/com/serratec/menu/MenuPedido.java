@@ -1,17 +1,18 @@
 package com.serratec.menu;
 
-import com.serratec.classes.Empresa;
+import com.serratec.classes.Pedido;
+import com.serratec.classes.ProdutoPedido;
 import com.serratec.conexao.*;
 import com.serratec.constantes.Util;
-import com.serratec.dml.EmpresaDML;
+import com.serratec.dml.PedidoDML;
 
 public class MenuPedido {
 	public static int menu() {
 
 		Util.escrever(Util.LINHAD);
-		Util.escrever("Menu Empresa");
+		Util.escrever("Menu Pedido");
 		Util.escrever(Util.LINHAD);
-		Util.escrever("1- Cadastrar");
+		Util.escrever("1- Novo Pedido");
 		Util.escrever("2- Alterar");
 		Util.escrever("3- Excluir");
 		Util.escrever("4- Listar");
@@ -37,13 +38,26 @@ public class MenuPedido {
 			break;
 		default:
 			Util.escrever("Opcao invalida");
+			Util.aperteEnter();
+			return opcoes(menu());
 		}
 		return opcao;
 	}
 
 	public static int cadastrar() {
-		EmpresaDML.gravarEmpresa(Connect.getCon(), Connect.dadosCon.getSchema(), Empresa.cadastrarEmpresa());
+		
+		Pedido p = Pedido.cadastrarPedido();
+		
+		PedidoDML.gravarPedido(Connect.getCon(), Connect.dadosCon.getSchema(), p);
+		Connect.pedidos.adicionarPedidoLista(p);
+		/*
+		if(Pedido.cadastrarPedido() == null) {
+			System.err.println("Pedido não cadastrado! ");
+			Util.aperteEnter();
+			return opcoes(menu());
+		}
 		Util.aperteEnter();
+		*/
 		return opcoes(menu());
 	}
 
@@ -58,6 +72,7 @@ public class MenuPedido {
 	}
 
 	public static int listar() {
+	
 		Util.aperteEnter();
 		return opcoes(menu());
 	}

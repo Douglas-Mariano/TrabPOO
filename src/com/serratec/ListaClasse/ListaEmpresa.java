@@ -1,6 +1,7 @@
 package com.serratec.ListaClasse;
 
 import com.serratec.classes.Empresa;
+import com.serratec.classes.Produto;
 import com.serratec.conexao.Conexao;
 import com.serratec.dao.EmpresaDAO;
 import com.serratec.dml.EmpresaDML;
@@ -17,8 +18,8 @@ public class ListaEmpresa {
 	static ArrayList<Empresa> empresas = new ArrayList<>();
 
 	public ListaEmpresa(Conexao con, String schema) {
-		ListaEmpresa.con = con;
-		ListaEmpresa.schema = schema;
+		this.con = con;
+		this.schema = schema;
 		carregarListaEmpresas();
 	}
 
@@ -59,52 +60,50 @@ public class ListaEmpresa {
 
 	}
 
+	public void imprimirEmpresas() {
+		System.out.println("\nLista de empresas: ");
+		System.out.println("\n===================");
+		System.out.println("\nNome\t\t| CNPJ\t\t| email");
+		System.out.println("\n===================");
+		
+		for (Empresa e : empresas){
+			System.out.println (e.getNome() + "\t\t" + e.getCpf_cnpj()+ "\t\t"+ e.getEmail());
+		}
+		
+	}
+
 	public static Empresa localizarEmpresa() {
 		Empresa localizado = null;
 		String cnpjempresa;
 		@SuppressWarnings("resource")
 		Scanner input = new Scanner(System.in);
-
-		cnpjempresa = input.nextLine();
-		for (Empresa e : empresas) {
-			if (e.getCpf_cnpj().equals(cnpjempresa)) {
-				localizado = e;
-				break;
-			}
-
-		}
-		return localizado;
+			
+				cnpjempresa = input.nextLine();
+				for (Empresa e : empresas) {
+					if (e.getCpf_cnpj().equals(cnpjempresa)) {
+						localizado = e;
+						break;}
+			
+			}return localizado;
 	}
 
 	public static boolean excluirEmpresa(Empresa e) {
-
+	
+		
 		boolean excluido = false;
 		for (Empresa cl : empresas) {
-			if (cl.getIdEmpresa() == e.getIdEmpresa()) {
+			if(cl.getIdEmpresa() == e.getIdEmpresa()) {
 				empresas.remove(empresas.lastIndexOf(cl));
 				EmpresaDML.excluirEmpresa(con, schema, e);
 				excluido = true;
 				break;
 			}
-
+					
 		}
 		return excluido;
 	}
 
 	public void adicionarEmpresaLista(Empresa e) {
 		ListaEmpresa.empresas.add(e);
-	}
-
-	public void imprimirEmpresas() {
-		System.out.println("===================");
-		System.out.println("Lista de empresas: ");
-		System.out.println("===================");
-		System.out.println("\nNome\t\t| CNPJ\t\t  |Email");
-		System.out.println("================================================");
-
-		for (Empresa e : empresas) {
-			String formatarTamanho = String.format("%-15s | %-15s | %-10s", e.getNome(), e.getCpf_cnpj(), e.getEmail());
-			System.out.println(formatarTamanho);
-		}
 	}
 }

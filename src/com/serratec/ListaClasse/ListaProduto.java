@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.serratec.classes.Produto;
 import com.serratec.conexao.Conexao;
+import com.serratec.constantes.Util;
 import com.serratec.dao.ProdutoDAO;
 import com.serratec.dml.ProdutoDML;
 
@@ -15,7 +16,7 @@ public class ListaProduto {
 	private Conexao con;
 	private String schema;
 
-	static ArrayList<Produto> produtos = new ArrayList<>();
+	protected static ArrayList<Produto> produtos = new ArrayList<>();
 
 	public ListaProduto(Conexao con, String schema) {
 		this.con = con;
@@ -45,7 +46,6 @@ public class ListaProduto {
 
 	private void carregarListaProdutos() {
 		ProdutoDAO produtoDAO = new ProdutoDAO(con, schema);
-
 		ResultSet tabela = produtoDAO.carregarProdutos();
 		ListaProduto.produtos.clear();
 
@@ -100,16 +100,14 @@ public class ListaProduto {
 
 	public static void imprimirProdutos() {
 
-		System.out.println("===================");
-		System.out.println("Lista de produtos: ");
-		System.out.println("===================");
-		System.out.println("\nCódigo\t| Nome\t\t| Descrição\t\t| vl. Unit\t\t| Porc. de Lucro\t| vl. Venda");
-		System.out.println(
-				"============================================================================================================");
+		System.out.println(Util.LINHAD);
+		Util.escrever("Relatório de Produtos:");
+		System.out.println(Util.LINHA);
+		Util.escrever("Código\t | Nome\t\t| descrição| vl. Unit.\t\t| Porc. de Lucro\t| vl. Venda");
+
 		for (Produto p : produtos) {
-			String formatarTamanho = String.format("%-7s | %-13s | %-21s | %-21s | %-21s | %-2s", p.getCdProduto(),
-					p.getNome(), p.getDescricao(), p.getValorUnit(), p.getPorcento(), p.getValorVenda());
-			System.out.println(formatarTamanho);
+			System.out.println(p.getCdProduto() + "\t\t" + p.getNome() + " " + p.getDescricao() + "\t\t"
+					+ p.getValorUnit() + "\t\t" + p.getPorcento() + "\t\t" + p.getValorVenda());
 		}
 	}
 }

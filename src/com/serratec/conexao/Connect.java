@@ -22,13 +22,24 @@ public class Connect {
 	public static ListaProduto produtos;
 	public static ListaPedido pedidos;
 
+//o método dadosEntrada "abre" nosso sistema
+//o sistema só é "aberto" depois que a configinicial retorna TRUE
+	
 	public static void dadosEntrada() {
 
 		if (configInicial()) {
+			
+//se conseguir criar o banco de dados com as informações que foram passadas na configinicial,
+//armazene essas informações em uma variável do tipo Conexao chamada "con"
+			
 			if (CreateDAO.createBD(dadosCon.getBanco(), dadosCon.getSchema(), dadosCon)) {
 				con = new Conexao(dadosCon);
 				con.conect();
 
+// aqui criamos os arrays que vamos usar ao longo do aplicativo
+// os próprios construtores de cada array chamam um método para
+//carregar as informações do banco de dados para si
+				
 				clientes = new ListaCliente(getCon(), dadosCon.getSchema());
 				empresas = new ListaEmpresa(getCon(), dadosCon.getSchema());
 				pedidos = new ListaPedido(getCon(), dadosCon.getSchema());
@@ -42,6 +53,8 @@ public class Connect {
 		} else
 			System.out.println("Não foi possível executar o sistema.");
 	}
+	
+
 
 	public static boolean configInicial() {
 		@SuppressWarnings("resource")

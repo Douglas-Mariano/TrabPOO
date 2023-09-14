@@ -16,6 +16,13 @@ public class Pedido {
 	private Prod_Pedido produtos;
 	private Empresa empresa;
 
+	@Override
+	public String toString() {
+		return "Pedido [idPedido=" + idPedido + ", cdPedido=" + cdPedido + ", dtPedido=" + dtPedido + ", cliente="
+				+ cliente + ", produtos=" + produtos + ", empresa=" + empresa + ", getProdutos()=" + getProdutos()
+				+ "]";
+	}
+
 	public long getIdPedido() {
 		return idPedido;
 	}
@@ -104,7 +111,7 @@ public class Pedido {
 
 		pd.AdicionarProdutos();
 		p.setProdutos(pd);
-//		System.out.println(p.getProdutos().getProdutos().toString());
+		System.out.println(p.getProdutos().toString());
 
 		/*
 		 * p.produtos.AdicionarProdutos(); if(!(p.getProdutos().getProdutos() == null ||
@@ -114,8 +121,9 @@ public class Pedido {
 		 * println("Carrinho vazio, por favor insira mais de um produto para criar o pedido!"
 		 * ); return null; }
 		 */
-
+		System.out.println(p.getIdPedido());
 		p.dtPedido = LocalDate.now();
+		
 		//p.idPedido++;
 
 		return p;

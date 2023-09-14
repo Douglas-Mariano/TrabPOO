@@ -1,6 +1,7 @@
 package com.serratec.classes;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import com.serratec.ListaClasse.ListaProduto;
@@ -71,14 +72,14 @@ public class Prod_Pedido {
 		} while (continua);
 	}
 
-	public static Produto localizarIdItem(long codigo) {
+	public static ArrayList<Itens> localizarIdItem(long codigo) {
 
 		Itens item = null;
 		for (int i = 0; i < produtosped.size(); i++) {
 			if (produtosped.get(i).getIdProduto() == codigo) {
 				item = produtosped.get(i);
 				System.out.println(item.getIdProduto());
-				return item;
+				return produtosped;
 			}
 		}
 		return null;

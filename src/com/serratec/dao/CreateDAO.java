@@ -193,8 +193,8 @@ public class CreateDAO {
 			criarTabela(con, entidade, schema);
 
 		if (entidadeExists(con, schema, entidade)) {
-			criarCampo(con, schema, entidade, "idpedido", "serial", true, false, null, null);
-			criarCampo(con, schema, entidade, "codigo", "varchar(10)", false, false, null, null);
+			criarCampo(con, schema, entidade, "idpedido", "serial", false, false, null, null);
+			criarCampo(con, schema, entidade, "codigo", "integer UNIQUE NOT NULL", true, false, null, null);
 			criarCampo(con, schema, entidade, "datapedido", "date", false, false, null, null);
 			criarCampo(con, schema, entidade, "idcliente", "integer", false, true, "cliente", "idcliente");
 			criarCampo(con, schema, entidade, "idempresa", "integer", false, true, "empresa", "idempresa");
@@ -211,7 +211,7 @@ public class CreateDAO {
 			criarCampo(con, schema, entidade, "idprod_pedido", "serial", true, false, null, null);
 			criarCampo(con, schema, entidade, "idproduto", "integer", false, true, "produto", "idproduto");
 			criarCampo(con, schema, entidade, "quantidade", "integer", false, false, null, null);
-			criarCampo(con, schema, entidade, "idpedido", "integer", false, true, "pedido", "idpedido");
+			criarCampo(con, schema, entidade, "codigo", "integer", false, true, "pedido", "codigo");
 		}
 	}
 

@@ -1,15 +1,16 @@
 package com.serratec.menu;
 
-import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.serratec.ListaClasse.ListaPedido;
 import com.serratec.ListaClasse.ListaProduto;
 import com.serratec.classes.Pedido;
 import com.serratec.classes.Prod_Pedido;
+import com.serratec.classes.Prod_Pedido.Itens;
 import com.serratec.classes.Produto;
 import com.serratec.conexao.Connect;
 import com.serratec.constantes.Util;
-import com.serratec.dao.PedidoDAO;
 import com.serratec.dml.PedidoDML;
 import com.serratec.dml.Prod_PedidoDML;
 
@@ -59,45 +60,45 @@ public class MenuPedido {
 		return opcao;
 	}
 
-	
 	public static int cadastrar() {
 
-		Produto prod = null;
+		List<Itens> prod = new ArrayList<>();
 		Pedido p = Pedido.cadastrarPedido();
 		Connect.pedidos.adicionarPedidoLista(p);
-		Pedido l = null;
-		
-		for (int i = 1; i <= ListaPedido.pedidos.size() ; i++) {
-			if(!(ListaPedido.localizarIdPedido(i) == null));{
-				l = ListaPedido.localizarIdPedido(i);
-				 
-			}
-		}
-		
-		//Pedido l = ListaPedido.localizarIdPedido(i);
-		
-		
-		for (int i = 0; i <= ListaProduto.produtos.size() ; i++) {
-			if(!(Prod_Pedido.localizarIdItem(i) == null));{
+
+		// Pedido l = ListaPedido.localizarIdPedido(i);
+
+		for (int i = 0; i <= ListaProduto.produtos.size(); i++) {
+			if (!(Prod_Pedido.localizarIdItem(i) == null));
+			{
 				prod = Prod_Pedido.localizarIdItem(i);
 			}
 		}
-		
-		
-		//Produto prod = Prod_Pedido.localizarIdItem();
-		
+
+		// Produto prod = Prod_Pedido.localizarIdItem();
+
 		PedidoDML.gravarPedido(Connect.getCon(), Connect.dadosCon.getSchema(), p);
-		
-		if (!(l == null)) {
-			Prod_PedidoDML.gravarPedido(Connect.getCon(), Connect.dadosCon.getSchema(), prod, l);
+
+/*
+		for (int i = 1; i <= ListaPedido.pedidos.size(); i++) {
+			if (!(ListaPedido.localizarIdPedido(i) == null))
+				;
+			{
+				l = ListaPedido.localizarIdPedido(i);
+
+			}
 		}
-		
+	*/	
+		if (!(p == null)) {
+			Prod_PedidoDML.gravarPedido(Connect.getCon(), Connect.dadosCon.getSchema(), prod, p);
+		}
+
 		if (p == null) {
 			System.err.println("Pedido não cadastrado! ");
 			return opcoes(menu());
 		}
 		Util.aperteEnter();
-
+	
 		return opcoes(menu());
 	}
 

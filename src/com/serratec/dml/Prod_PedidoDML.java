@@ -1,16 +1,19 @@
 package com.serratec.dml;
 
+import java.util.List;
+
 import com.serratec.classes.Pedido;
 import com.serratec.classes.Prod_Pedido;
+import com.serratec.classes.Prod_Pedido.Itens;
 import com.serratec.classes.Produto;
 import com.serratec.conexao.Conexao;
 import com.serratec.dao.Prod_PedidoDAO;
 
 public class Prod_PedidoDML {
 
-	public static void gravarPedido(Conexao con, String schema, Produto prod, Pedido ped) {
+	public static void gravarPedido(Conexao con, String schema, List<Itens> prod, Pedido ped) {
 		Prod_PedidoDAO pdao = new Prod_PedidoDAO(con, schema);
-		pdao.incluirProd_Pedido(0, prod, ped);
+		pdao.incluirProd_Pedido(prod, ped);
 
 	}
 

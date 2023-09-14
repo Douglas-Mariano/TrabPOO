@@ -12,7 +12,6 @@ import com.serratec.dao.ClienteDAO;
 import com.serratec.dml.ClienteDML;
 
 public class ListaCliente {
-
 	private static Conexao con;
 	private static String schema;
 	
@@ -45,7 +44,7 @@ public class ListaCliente {
 		}
 	}
 	
-	public void carregarListaClientes() {
+	private void carregarListaClientes() {
 		ClienteDAO cdao = new ClienteDAO(con, schema);
 		
 		ResultSet tabela = cdao.carregarClientes();
